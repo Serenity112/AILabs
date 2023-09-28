@@ -62,6 +62,7 @@ namespace AILabs.LabAnts
             _antColony = new AntColony(antColonyParameters);
             _graphDrawer = new GraphDrawer(pictureBox1, _antColony.DistancesGraph, GraphVisuals.DefaultVisuals());
 
+            textBox1.Text = "";
             RedrawGraph();
         }
 
@@ -70,6 +71,7 @@ namespace AILabs.LabAnts
             RedrawGraph();
             PathData data = _antColony.SingleIteration();
             _graphDrawer.DrawPath(data.PathIndexes, Color.Red);
+            textBox1.Text = $"Путь: {data}, L: {data.Length}";
         }
 
         private void FullACO_Search(object sender, EventArgs e)
@@ -77,6 +79,7 @@ namespace AILabs.LabAnts
             RedrawGraph();
             PathData data = _antColony.ACO_Full();
             _graphDrawer.DrawPath(data.PathIndexes, Color.Red);
+            textBox1.Text = $"Путь: {data}, L: {data.Length}";
         }
 
         private void DefaultSettings(object sender, EventArgs e)

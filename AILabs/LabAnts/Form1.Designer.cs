@@ -72,10 +72,12 @@
             // 
             // textBox1
             // 
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.textBox1.Location = new System.Drawing.Point(12, 730);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(792, 23);
+            this.textBox1.Size = new System.Drawing.Size(792, 36);
             this.textBox1.TabIndex = 1;
+            this.textBox1.Text = "Путь";
             // 
             // Scroll1
             // 
@@ -249,7 +251,7 @@
             this.Numeric5.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Numeric5.Location = new System.Drawing.Point(837, 585);
             this.Numeric5.Maximum = new decimal(new int[] {
-            15,
+            1000,
             0,
             0,
             0});

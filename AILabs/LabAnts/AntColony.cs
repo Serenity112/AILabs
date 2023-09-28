@@ -1,5 +1,6 @@
 ﻿using AILabs.LabAnts;
 using MathLib;
+using System.Text;
 
 namespace AILabs
 {
@@ -16,7 +17,7 @@ namespace AILabs
 
         public static AntColonyParameters DefaultParameters()
         {
-            return new AntColonyParameters(0.75, 2.0, 0.27, 1.0, 10);
+            return new AntColonyParameters(0.75, 2.0, 0.27, 1.0, 100);
         }
 
         public double PhInfl { get; private set; }
@@ -52,6 +53,20 @@ namespace AILabs
         {
             return PathIndexes.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < PathIndexes.Count; i++)
+            {
+                stringBuilder.Append(Convert.ToChar(PathIndexes[i] + 65).ToString());
+                if (i != PathIndexes.Count - 1)
+                {
+                    stringBuilder.Append(" -> ");
+                }
+            }
+            return stringBuilder.ToString();
+        }
     }
 
     public class AntColony
@@ -76,7 +91,7 @@ namespace AILabs
 
         // Условие окончания полного алгоритма
         private int _samePathCount = 10;
-        private int _maxIterations = 200;
+        private int _maxIterations = 500;
 
         // Контролируемые параметры
         private double _phInfl = 0.75;
@@ -114,6 +129,10 @@ namespace AILabs
                 if (newData.Equals(prevData))
                 {
                     samePathCountdown--;
+                }
+                else
+                {
+                    samePathCountdown = _samePathCount;
                 }
 
                 prevData = newData;
