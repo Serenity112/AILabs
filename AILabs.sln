@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AILabs", "AILabs\AILabs.csproj", "{53ED60CE-D94B-46EE-8637-301917897C7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathLib", "MathLib\MathLib.csproj", "{6CDB9230-B113-4C86-9B80-3D9F1A36EB32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53ED60CE-D94B-46EE-8637-301917897C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53ED60CE-D94B-46EE-8637-301917897C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53ED60CE-D94B-46EE-8637-301917897C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53ED60CE-D94B-46EE-8637-301917897C7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CDB9230-B113-4C86-9B80-3D9F1A36EB32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDB9230-B113-4C86-9B80-3D9F1A36EB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CDB9230-B113-4C86-9B80-3D9F1A36EB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CDB9230-B113-4C86-9B80-3D9F1A36EB32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2774CE57-5078-43E1-8727-53AF5300C725}
+	EndGlobalSection
+EndGlobal
