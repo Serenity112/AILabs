@@ -98,8 +98,8 @@ namespace AILabs
 
         public void RedrawGraphBase()
         {
-            _backgroundGraph = new Bitmap(_pictureBox.Width, _pictureBox.Height);
-            Graphics graphics = Graphics.FromImage(_backgroundGraph);
+            //_backgroundGraph = new Bitmap(_pictureBox.Width, _pictureBox.Height);
+            //Graphics graphics = Graphics.FromImage(_backgroundGraph);
 
             // Отрисовка рёбер
             Pen edgePen = new Pen(_graphVisuals.EdgeColor, _graphVisuals.EdgeSize);
@@ -123,7 +123,7 @@ namespace AILabs
             }
 
             //_pictureBox.BackgroundImage = _backgroundGraph;
-           // _graphics.Clear(Color.White);
+            // _graphics.Clear(Color.White);
         }
 
         public void ColorVertex(int vertexNum, Color color)
@@ -175,38 +175,9 @@ namespace AILabs
             }
         }
 
-        public void Invalidate()
-        {
-            _pictureBox.Invalidate();
-        }
-
         public void Clear()
         {
-            //Image img = pictureBox.BackgroundImage;
             _graphics.Clear(Color.White);
-            //pictureBox.BackgroundImage = img;
-
-            //_pictureBox.BackgroundImage = _backgroundGraph;
-            //_graphics.DrawImage(_backgroundGraph, Point.Empty);
-
-            //
-        }
-
-        private Point[] CalculateVertexCoordinates()
-        {
-            Point[] vertexes = new Point[_vertexCount];
-
-
-            return vertexes;
-        }
-
-        private void Draw(object sender, EventArgs e)
-        {
-            _graphics.FillEllipse(new SolidBrush(Color.Red), new Rectangle(30, 30, 50, 50));
-            /*foreach (var point in _vertexCoordinates)
-            {
-                _graphics.FillEllipse(_vertexBrush, new Rectangle(point.X - _vertexRadius / 2, point.Y - _vertexRadius / 2, _vertexRadius, _vertexRadius));
-            }*/
         }
 
         private Point PointByCenter(Point center, double radius, double angle)
