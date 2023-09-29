@@ -17,7 +17,7 @@ namespace AILabs
 
         public static AntColonyParameters DefaultParameters()
         {
-            return new AntColonyParameters(0.75, 2.0, 0.27, 1.0, 100);
+            return new AntColonyParameters(0.75, 2.0, 0.27, 1.0, 5);
         }
 
         public double PhInfl { get; private set; }
@@ -71,9 +71,9 @@ namespace AILabs
 
     public class AntColony
     {
-        public AntColony(AntColonyParameters parameters, string cityDataPath = @"..\..\..\LabAnts\Input\", string cityFileName = "input.txt")
+        public AntColony(GraphData inputGraph, AntColonyParameters parameters)
         {
-            InitializeCities(Path.Combine(cityDataPath, cityFileName));
+            InitializeCities(inputGraph);
 
             _phInfl = parameters.PhInfl;
             _distInfl = parameters.DistInfl;
@@ -102,9 +102,9 @@ namespace AILabs
 
         private const double InitialPhermonoes = 1;
 
-        private void InitializeCities(string filePath)
+        private void InitializeCities(GraphData inputGraph)
         {
-            DistancesGraph = GraphParser.ReadGraphData(filePath);
+            DistancesGraph = inputGraph;
             _citiesNum = DistancesGraph.Size;
 
             PheromonesGraph = new GraphData(new double[_citiesNum, _citiesNum]);

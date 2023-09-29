@@ -5,14 +5,14 @@ namespace AILabs.LabAnts
 {
     public partial class Form1 : Form
     {
-        private const decimal TrackerScale = 100.0M;
-
         private AntColony _antColony;
-
         private GraphDrawer _graphDrawer;
+        private GraphData _inputGraph;
+        private string _cityDataPath = @"..\..\..\LabAnts\Input\input.txt";
 
         private TrackBar[] _trackBars;
         private NumericUpDown[] _numerics;
+        private const decimal TrackerScale = 100.0M;
 
         public Form1()
         {
@@ -49,9 +49,9 @@ namespace AILabs.LabAnts
 
         private void Start()
         {
-            _antColony = new AntColony(AntColonyParameters.DefaultParameters());
-            SetFormsInitialParameters();
-            UpdateColony(this, EventArgs.Empty);
+            _inputGraph = GraphParser.ReadGraphData(_cityDataPath);
+            _antColony = new AntColony(_inputGraph, AntColonyParameters.DefaultParameters());
+            DefaultSettings(this, EventArgs.Empty);
         }
 
         private void UpdateColony(object sender, EventArgs e)
@@ -59,7 +59,9 @@ namespace AILabs.LabAnts
             AntColonyParameters antColonyParameters = new AntColonyParameters(
                 (double)Numeric1.Value, (double)Numeric2.Value, (double)Numeric3.Value, (double)Numeric4.Value, (int)Numeric5.Value);
 
-            _antColony = new AntColony(antColonyParameters);
+            _inputGraph = GraphParser.ReadGraphData(_cityDataPath);
+
+            _antColony = new AntColony(_inputGraph, antColonyParameters);
             _graphDrawer = new GraphDrawer(pictureBox1, _antColony.DistancesGraph, GraphVisuals.DefaultVisuals());
 
             textBox1.Text = "";
@@ -76,6 +78,7 @@ namespace AILabs.LabAnts
 
         private void FullACO_Search(object sender, EventArgs e)
         {
+            UpdateColony(this, EventArgs.Empty);
             RedrawGraph();
             PathData data = _antColony.ACO_Full();
             _graphDrawer.DrawPath(data.PathIndexes, Color.Red);
@@ -85,6 +88,7 @@ namespace AILabs.LabAnts
         private void DefaultSettings(object sender, EventArgs e)
         {
             SetFormsInitialParameters();
+            UpdateColony(this, EventArgs.Empty);
         }
 
         private void RedrawGraph()

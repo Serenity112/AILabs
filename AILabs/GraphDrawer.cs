@@ -66,11 +66,8 @@ namespace AILabs
 
         private Graphics _graphics;
 
-        private PictureBox _pictureBox;
-
         public GraphDrawer(PictureBox pictureBox, GraphData data, GraphVisuals visuals)
         {
-            _pictureBox = pictureBox;
             _graphics = pictureBox.CreateGraphics();
 
             _graphData = data;
@@ -161,7 +158,36 @@ namespace AILabs
 
         public void DrawArrow(int i, int j, Color color)
         {
+            double arrowLen = 10;
+            double arrAngle1 = Math.PI / 6;
+            double arrAngle2 = -Math.PI / 6;
 
+            Pen edgePen = new Pen(color, _graphVisuals.EdgeSize);
+            Point p_i = _Vertexes[i].Coordinates;
+            Point p_j = _Vertexes[j].Coordinates;
+
+            Vector V_ij = (new Vector(p_i, p_j)).Normalized();
+            Vector V_ji = (new Vector(p_j, p_i)).Normalized();
+
+            Point p_i_new = p_i + V_ij * (_graphVisuals.VertexRadius / 2);
+            Point p_j_new = p_j + V_ji * (_graphVisuals.VertexRadius / 2);
+
+            Point p_j_arrow = p_j_new + V_ji * arrowLen;
+
+            Point p0 = p_j_new;
+            Point p_rot = p_j_arrow;
+
+            double x1 = p0.X + (p_rot.X - p0.X) * Math.Cos(arrAngle1) - (p_rot.Y - p0.Y) * Math.Sin(arrAngle1);
+            double y1 = p0.Y + (p_rot.X - p0.X) * Math.Sin(arrAngle1) + (p_rot.Y - p0.Y) * Math.Cos(arrAngle1);
+            Point arrOffset1 = new Point((int)x1, (int)y1);
+
+            double x2 = p0.X + (p_rot.X - p0.X) * Math.Cos(arrAngle2) - (p_rot.Y - p0.Y) * Math.Sin(arrAngle2);
+            double y2 = p0.Y + (p_rot.X - p0.X) * Math.Sin(arrAngle2) + (p_rot.Y - p0.Y) * Math.Cos(arrAngle2);
+            Point arrOffset2 = new Point((int)x2, (int)y2);
+
+            _graphics.DrawLine(edgePen, p_i_new, p_j_new);
+            _graphics.DrawLine(edgePen, p0, arrOffset1);
+            _graphics.DrawLine(edgePen, p0, arrOffset2);
         }
 
         public void DrawPath(List<int> indexes, Color color)
@@ -171,7 +197,7 @@ namespace AILabs
                 int i = indexes[v];
                 int j = indexes[v + 1];
 
-                DrawEdge(i, j, color);
+                DrawArrow(i, j, color);
             }
         }
 
