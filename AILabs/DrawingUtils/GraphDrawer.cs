@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace AILabs
+namespace AILabs.DrawingUtils
 {
     public struct GraphVisuals
     {
@@ -136,8 +136,8 @@ namespace AILabs
             Point p_i = _Vertexes[i].Coordinates;
             Point p_j = _Vertexes[j].Coordinates;
 
-            Vector V_ij = (new Vector(p_i, p_j)).Normalized();
-            Vector V_ji = (new Vector(p_j, p_i)).Normalized();
+            Vector V_ij = new Vector(p_i, p_j).Normalized();
+            Vector V_ji = new Vector(p_j, p_i).Normalized();
 
             Point p_i_new = p_i + V_ij * (_graphVisuals.VertexRadius / 2);
             Point p_j_new = p_j + V_ji * (_graphVisuals.VertexRadius / 2);
@@ -166,8 +166,8 @@ namespace AILabs
             Point p_i = _Vertexes[i].Coordinates;
             Point p_j = _Vertexes[j].Coordinates;
 
-            Vector V_ij = (new Vector(p_i, p_j)).Normalized();
-            Vector V_ji = (new Vector(p_j, p_i)).Normalized();
+            Vector V_ij = new Vector(p_i, p_j).Normalized();
+            Vector V_ji = new Vector(p_j, p_i).Normalized();
 
             Point p_i_new = p_i + V_ij * (_graphVisuals.VertexRadius / 2);
             Point p_j_new = p_j + V_ji * (_graphVisuals.VertexRadius / 2);

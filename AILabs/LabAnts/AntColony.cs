@@ -17,7 +17,7 @@ namespace AILabs
 
         public static AntColonyParameters DefaultParameters()
         {
-            return new AntColonyParameters(0.75, 2.0, 0.27, 1.0, 5);
+            return new AntColonyParameters(0.70, 1.9, 0.3, 1.0, 5);
         }
 
         public double PhInfl { get; private set; }
@@ -37,7 +37,7 @@ namespace AILabs
 
         public List<int> PathIndexes { get; private set; }
 
-        public double Length;
+        public double Length { get; private set; }
 
         public override bool Equals(object? obj)
         {
@@ -94,10 +94,10 @@ namespace AILabs
         private int _maxIterations = 500;
 
         // Контролируемые параметры
-        private double _phInfl = 0.75;
-        private double _distInfl = 2.0;
+        private double _phInfl = 0.70;
+        private double _distInfl = 1.9;
 
-        private double _phEvapRate = 0.27;
+        private double _phEvapRate = 0.3;
         private double _phStr = 1.0;
 
         private const double InitialPhermonoes = 1;
@@ -144,12 +144,12 @@ namespace AILabs
 
         public PathData SingleIteration()
         {
-            List<int> Path = new List<int>();
+            List<int> path = new List<int>();
             List<int> remainingList = Enumerable.Range(0, _citiesNum).ToList();
 
             int currentAntIndex = StartingCityIndex;
             remainingList.Remove(StartingCityIndex);
-            Path.Add(StartingCityIndex);
+            path.Add(StartingCityIndex);
 
             double length = 0;
             // Обход всех вершин
@@ -168,21 +168,20 @@ namespace AILabs
                 length += DistancesGraph.Get(currentAntIndex, newIndex);
 
                 remainingList.Remove(newIndex);
-                Path.Add(newIndex);
+                path.Add(newIndex);
 
                 currentAntIndex = newIndex;
             }
 
             // Прошёл все вершины, возвращаемся в начальную
             length += DistancesGraph.Get(currentAntIndex, StartingCityIndex);
-            Path.Add(StartingCityIndex);
+            path.Add(StartingCityIndex);
 
-            PathData pathData = new PathData(Path, length);
+            PathData pathData = new PathData(path, length);
             UpdatePheromones(pathData);
 
             return pathData;
         }
-
 
         private void UpdatePheromones(PathData pathdata)
         {

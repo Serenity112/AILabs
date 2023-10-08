@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="HammingNetwork\Input\" />
+    <Folder Include="HammingNetwork\Resources\" />
     <Folder Include="LabAnts\Input\" />
   </ItemGroup>
 
