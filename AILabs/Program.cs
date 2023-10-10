@@ -1,5 +1,6 @@
 using AILabs.LabAnts;
 using AILabs.HammingNetwork;
+using AILabs.Swarm;
 
 namespace AILabs
 {
@@ -15,7 +16,8 @@ namespace AILabs
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             //Application.Run(new Form1());
-            Application.Run(new Form2());
+            //Application.Run(new Form2());
+            Application.Run(new Form3());
         }
     }
 }

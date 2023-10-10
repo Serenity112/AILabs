@@ -21,11 +21,17 @@ namespace MathLib
 
         public static Point operator +(Point first, Vector second) => new Point((int)(first.X + second.Dx), (int)(first.Y + second.Dy));
 
-        public static Vector operator -(Vector vector) => new(-vector.Dx, -vector.Dy);
+        public static PointF operator +(PointF first, Vector second) => new PointF((float)(first.X + second.Dx), (float)(first.Y + second.Dy));
 
-        public static Vector operator *(Vector vector, double multiplier) => new(vector.Dx * multiplier, vector.Dy * multiplier);
+        public static Vector operator -(Vector vector) => new Vector(-vector.Dx, -vector.Dy);
+
+        public static Vector operator *(Vector vector, double multiplier) => new Vector(vector.Dx * multiplier, vector.Dy * multiplier);
 
         public static Vector operator *(double multiplier, Vector vector) => vector * multiplier;
+
+        public static Vector operator -(Vector vector1, Vector vector2) => vector1 + (-vector2);
+
+        public static Vector operator +(Vector vector1, Vector vector2) => new Vector(vector1.Dx + vector2.Dx, vector1.Dy + vector2.Dy);
 
         public static Vector operator /(Vector vector, double divider) => vector * (1.0 / divider);
 
@@ -35,6 +41,13 @@ namespace MathLib
         {
             double length = Length();
             return this / length;
+        }
+
+        public Vector Copy() => new Vector(Dx, Dy);
+
+        public override string ToString()
+        {
+            return $"[{Dx}, {Dy}]";
         }
     }
 }
