@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,52 +9,65 @@ namespace AILabs.DrawingUtils
 {
     public class FunctionPlotDrawer
     {
-        private static int interval = 10;
+        private static int contourCount = 8;
 
-        private static Color _minColor = Color.FromArgb(40, 27, 149);
-        private static Color _maxColor = Color.FromArgb(255, 102, 102);
+        private static Color _minColor = Color.FromArgb(102, 0, 204);
+        private static Color _maxColor = Color.FromArgb(255, 0, 0);
 
-        public static Bitmap DrawBitmap(PictureBox pictureBox, Func<double, double, double> func, (double x, double y) minimumCoords)
+        public static Bitmap ContourPlotter(PictureBox pictureBox, Func<double, double, double> func, (double x, double y) center, double interval)
         {
             int width = pictureBox.Width;
             int height = pictureBox.Height;
 
             Bitmap bitmap = new Bitmap(width, height);
 
-
-
-            double minimum = func(minimumCoords.x, minimumCoords.y);
-            (double x, double y) maximumCoords = minimumCoords;
-            double maximum = minimum;
+            double minVal = func(0, 0);
+            double maxVal = minVal;
 
             double searchStep = 0.01;
-            for (double i = minimumCoords.x - interval; i < minimumCoords.x + interval; i += searchStep)
+            for (double x_i = center.x - interval; x_i < center.x + interval; x_i += searchStep)
             {
-                for (double j = minimumCoords.y - interval; j < minimumCoords.y + interval; j += searchStep)
+                for (double y_j = center.y - interval; y_j < center.y + interval; y_j += searchStep)
                 {
-                    if (func(i, j) > maximum)
+                    double value = func(x_i, y_j);
+
+                    if (value > maxVal)
                     {
-                        maximum = func(i, j);
-                        maximumCoords = (i, j);
+                        maxVal = value;
+                    }
+
+                    if (value < minVal)
+                    {
+                        minVal = value;
                     }
                 }
             }
 
-            double valuesInterval = Math.Abs(maximum - minimum);
-            for (int i = 0; i < width; i++)
+            double drawStep = 1.0; 
+            for (double i = 0; i < width; i += drawStep)
             {
-                for (int j = 0; j < height; j++)
+                for (double j = 0; j < height; j += drawStep)
                 {
-                    /* double f_x = 2 * interval 
-                     double f_y =*/
-                    //(func(f_x, f_y) + Math.Abs(minimum)) / valuesInterval
-                    Color newColor = InterpolateColor((i + j) / 1024.0);
-                    bitmap.SetPixel(i, j, newColor);
+                    double f_x = (i / width) * (2 * interval) + (-interval);
+                    double f_y = (j / height) * (2 * interval) + (-interval);
+                    double value = func(f_x, f_y);
+                    double ratio = (value - minVal) / (maxVal - minVal);
+                    
+                    if (ratio >= 0)
+                    {
+                        Color newColor = InterpolateColor(ratio);
+                        bitmap.SetPixel((int)i, (int)j, newColor);
+                        //textBox.Text += "ratio: " + ratio;
+                    }
+                    else
+                    {
+
+                    }
+
+
+
                 }
             }
-
-            //Function func = new Function((double x, double y) => x + y);
-
 
             return bitmap;
         }
@@ -63,7 +77,7 @@ namespace AILabs.DrawingUtils
             int interpolatedR = (int)(_minColor.R + (_maxColor.R - _minColor.R) * ratio);
             int interpolatedG = (int)(_minColor.G + (_maxColor.G - _minColor.G) * ratio);
             int interpolatedB = (int)(_minColor.B + (_maxColor.B - _minColor.B) * ratio);
-
+            double r = ratio;
             return Color.FromArgb(interpolatedR, interpolatedG, interpolatedB);
         }
     }

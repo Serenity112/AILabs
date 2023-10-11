@@ -29,7 +29,9 @@ namespace MathLib
 
         public static Vector operator *(double multiplier, Vector vector) => vector * multiplier;
 
-        public static Vector operator -(Vector vector1, Vector vector2) => vector1 + (-vector2);
+        public static Vector operator -(Vector vector1, Vector vector2) => new Vector(vector2.Dx - vector1.Dx, vector2.Dy - vector1.Dy);
+
+        public static Vector ComponentSubstract(Vector vector1, Vector vector2) => new Vector(vector1.Dx - vector2.Dx, vector1.Dy - vector2.Dy);
 
         public static Vector operator +(Vector vector1, Vector vector2) => new Vector(vector1.Dx + vector2.Dx, vector1.Dy + vector2.Dy);
 
