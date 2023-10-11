@@ -7,14 +7,19 @@ using System.Threading.Tasks;
 
 namespace AILabs.DrawingUtils
 {
+    public enum DrawingMode
+    {
+        Contour,
+        Gradient
+    }
+
     public class FunctionPlotDrawer
     {
-        private static int contourCount = 8;
-
         private static Color _minColor = Color.FromArgb(102, 0, 204);
         private static Color _maxColor = Color.FromArgb(255, 0, 0);
+        private static int _contourCount = 10;
 
-        public static Bitmap ContourPlotter(PictureBox pictureBox, Func<double, double, double> func, (double x, double y) center, double interval)
+        public static Bitmap ContourPlotter(PictureBox pictureBox, Func<double, double, double> func, (double x, double y) center, double interval, DrawingMode drawingMode)
         {
             int width = pictureBox.Width;
             int height = pictureBox.Height;
@@ -43,7 +48,7 @@ namespace AILabs.DrawingUtils
                 }
             }
 
-            double drawStep = 1.0; 
+            double drawStep = 1.0;
             for (double i = 0; i < width; i += drawStep)
             {
                 for (double j = 0; j < height; j += drawStep)
@@ -51,21 +56,28 @@ namespace AILabs.DrawingUtils
                     double f_x = (i / width) * (2 * interval) + (-interval);
                     double f_y = (j / height) * (2 * interval) + (-interval);
                     double value = func(f_x, f_y);
+
                     double ratio = (value - minVal) / (maxVal - minVal);
-                    
-                    if (ratio >= 0)
+
+                    switch (drawingMode)
                     {
-                        Color newColor = InterpolateColor(ratio);
-                        bitmap.SetPixel((int)i, (int)j, newColor);
-                        //textBox.Text += "ratio: " + ratio;
+                        case DrawingMode.Contour:
+                            double step = Math.Round(1.0 / _contourCount, 2);
+                            for (double k = step; k <= 1; k += step)
+                            {
+                                if (ratio <= k)
+                                {
+                                    ratio = k;
+                                    break;
+                                }
+                            }
+                            break;
+                        case DrawingMode.Gradient:
+                            break;
                     }
-                    else
-                    {
 
-                    }
-
-
-
+                    Color newColor = InterpolateColor(ratio);
+                    bitmap.SetPixel((int)i, (int)j, newColor);
                 }
             }
 

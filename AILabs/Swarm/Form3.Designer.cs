@@ -44,6 +44,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
@@ -107,7 +108,7 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(710, 459);
+            this.trackBar1.Location = new System.Drawing.Point(710, 479);
             this.trackBar1.Maximum = 1000;
             this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
@@ -120,7 +121,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(720, 419);
+            this.label1.Location = new System.Drawing.Point(720, 439);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(179, 25);
             this.label1.TabIndex = 6;
@@ -140,7 +141,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(905, 419);
+            this.label3.Location = new System.Drawing.Point(905, 439);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 25);
             this.label3.TabIndex = 8;
@@ -217,11 +218,23 @@
             this.label9.TabIndex = 15;
             this.label9.Text = "Y";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.checkBox1.Location = new System.Drawing.Point(720, 373);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(111, 29);
+            this.checkBox1.TabIndex = 16;
+            this.checkBox1.Text = "Градиент";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1123, 781);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -265,5 +278,6 @@
         private Label label7;
         private Label label8;
         private Label label9;
+        private CheckBox checkBox1;
     }
 }

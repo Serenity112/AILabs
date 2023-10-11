@@ -51,7 +51,7 @@ namespace AILabs.Swarm
             var result = _swarmMethod.SingleIteration();
             extremum = result.extremum;
 
-            _plot = FunctionPlotDrawer.ContourPlotter(pictureBox1, _allowedFunctions[_pickedFunction], (0, 0), _interval);
+            _plot = FunctionPlotDrawer.ContourPlotter(pictureBox1, _allowedFunctions[_pickedFunction], (0, 0), _interval, (DrawingMode)Convert.ToInt32(checkBox1.Checked));
 
             for (int i = 1; i < maxCount; i++)
             {
@@ -96,14 +96,14 @@ namespace AILabs.Swarm
             if (!_plotReady)
             {
                 _plotReady = true;
-                _plot = FunctionPlotDrawer.ContourPlotter(pictureBox1, _allowedFunctions[_pickedFunction], (0, 0), _interval);
+                _plot = FunctionPlotDrawer.ContourPlotter(pictureBox1, _allowedFunctions[_pickedFunction], (0, 0), _interval, (DrawingMode)Convert.ToInt32(checkBox1.Checked));
             }
 
             Bitmap particlesMap = DrawParticles(result.data);
 
-            _graphics.DrawImage(_plot, new Rectangle(0, 0, 512, 512));
+            _graphics.DrawImage(_plot, new Rectangle(0, 0, pictureBox1.Width, pictureBox1.Height));
 
-            _graphics.DrawImage(particlesMap, new Rectangle(0, 0, 512, 512));
+            _graphics.DrawImage(particlesMap, new Rectangle(0, 0, pictureBox1.Width, pictureBox1.Height));
 
         }
 
