@@ -107,21 +107,18 @@ namespace AILabs.Swarm
 
         }
 
-        private Bitmap DrawParticles(List<Vector> data)
+        private Bitmap DrawParticles(List<ParticleData> data)
         {
             Bitmap particles = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             particles.MakeTransparent();
             Graphics g = Graphics.FromImage(particles);
 
-
-            //g.ScaleTransform(-1, 1);
-
-
             int width = 2;
             Pen pen = new Pen(Color.White, width);
 
-            foreach (var vect in data)
+            foreach (var particle in data)
             {
+                Vector vect = particle.CurrentPoint;
                 if (vect.Dx < -_interval || vect.Dy > _interval)
                 {
                     continue;
@@ -129,8 +126,19 @@ namespace AILabs.Swarm
 
                 Vector normVal = vect + new Vector(_interval, _interval);
                 Vector trVal = ((normVal / (2.0 * _interval)) * pictureBox1.Width);
-
                 g.DrawEllipse(pen, new Rectangle((int)(trVal.Dx - width / 2), (int)(trVal.Dy - width / 2), width, width));
+
+                if (checkBox2.Checked)
+                {
+                    Vector arrow = particle.Speed;
+                    Vector normArrow = arrow + new Vector(_interval, _interval);
+                    Vector trArrow = ((normArrow / (2.0 * _interval)) * pictureBox1.Width);
+
+                    Vector normalizedArrow = (trArrow - trVal).Normalized() * 10;
+                    Vector finalArrow = trVal + normalizedArrow;
+
+                    g.DrawLine(new Pen(Color.White, 1), (int)trVal.Dx, (int)trVal.Dy, (int)finalArrow.Dx, (int)finalArrow.Dy);
+                }
             }
 
             return particles;

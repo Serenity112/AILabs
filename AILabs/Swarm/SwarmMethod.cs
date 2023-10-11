@@ -85,7 +85,7 @@ namespace AILabs.Swarm
             return (_particlesData, _glExtr);
         }
 
-        public (List<Vector> data, Vector extremum) SingleIteration()
+        public (List<ParticleData> data, Vector extremum) SingleIteration()
         {
             for (int i = 0; i < _particlesData.Count; i++)
             {
@@ -114,13 +114,8 @@ namespace AILabs.Swarm
                 _particlesData[i] = data;
             }
 
-            List<Vector> result = new List<Vector>();
-            foreach (var data in _particlesData)
-            {
-                result.Add(data.CurrentPoint.Copy());
-            }
 
-            return (result, _glExtr);
+            return (_particlesData, _glExtr);
         }
     }
 }
