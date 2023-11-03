@@ -49,7 +49,7 @@ namespace MathLib
 
         public override string ToString()
         {
-            return $"[{Dx}, {Dy}]";
+            return $"[{Math.Round(Dx, 5)}, {Math.Round(Dy, 5)}]";
         }
     }
 }

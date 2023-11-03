@@ -47,5 +47,62 @@ namespace MathLib
                 }
             }
         }
+
+        public PathData GetPath(List<int> vertexes)
+        {
+            double length = 0;
+            int currVertex = vertexes[0];
+
+            for (int i = 1; i < vertexes.Count; i++)
+            {
+                int newVertex = vertexes[i];
+                length += _matrix[currVertex, newVertex];
+                currVertex = newVertex;
+            }
+
+            return new PathData(vertexes, length);
+        }
+    }
+
+    public struct PathData
+    {
+        public PathData(List<int> list, double length)
+        {
+            PathIndexes = list;
+            Length = length;
+        }
+
+        public List<int> PathIndexes { get; private set; }
+
+        public double Length { get; private set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is PathData))
+                return false;
+
+            PathData pathData = (PathData)obj;
+
+            return PathIndexes.SequenceEqual(pathData.PathIndexes);
+        }
+
+        public override int GetHashCode()
+        {
+            return PathIndexes.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < PathIndexes.Count; i++)
+            {
+                stringBuilder.Append(Convert.ToChar(PathIndexes[i] + 65).ToString());
+                if (i != PathIndexes.Count - 1)
+                {
+                    stringBuilder.Append(" -> ");
+                }
+            }
+            return stringBuilder.ToString();
+        }
     }
 }

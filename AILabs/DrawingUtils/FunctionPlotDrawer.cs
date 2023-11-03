@@ -19,20 +19,27 @@ namespace AILabs.DrawingUtils
         private static Color _maxColor = Color.FromArgb(255, 0, 0);
         private static int _contourCount = 10;
 
-        public static Bitmap ContourPlotter(PictureBox pictureBox, Func<double, double, double> func, (double x, double y) center, double interval, DrawingMode drawingMode)
+        public static Bitmap ContourPlotter(PictureBox pictureBox, Func<double, double, double> func,
+            (double x, double y) left_bottom, (double x, double y) right_top, DrawingMode drawingMode)
         {
+            (double x, double y) center = ((right_top.x + left_bottom.x) / 2, (right_top.y + left_bottom.y) / 2);
+
             int width = pictureBox.Width;
             int height = pictureBox.Height;
 
             Bitmap bitmap = new Bitmap(width, height);
 
-            double minVal = func(0, 0);
+            double minVal = func(center.x, center.y);
             double maxVal = minVal;
 
+            double x_interval = right_top.x - left_bottom.x;
+            double y_interval = right_top.y - left_bottom.y;
+
+            // Поиск минимума и максимума значения функции
             double searchStep = 0.01;
-            for (double x_i = center.x - interval; x_i < center.x + interval; x_i += searchStep)
+            for (double x_i = left_bottom.x; x_i < right_top.x; x_i += searchStep)
             {
-                for (double y_j = center.y - interval; y_j < center.y + interval; y_j += searchStep)
+                for (double y_j = left_bottom.y; y_j < right_top.y; y_j += searchStep)
                 {
                     double value = func(x_i, y_j);
 
@@ -48,15 +55,15 @@ namespace AILabs.DrawingUtils
                 }
             }
 
+            // Отрисовка
             double drawStep = 1.0;
             for (double i = 0; i < width; i += drawStep)
             {
                 for (double j = 0; j < height; j += drawStep)
                 {
-                    double f_x = (i / width) * (2 * interval) + (-interval);
-                    double f_y = (j / height) * (2 * interval) + (-interval);
+                    double f_x = (i / width) * x_interval + left_bottom.x;
+                    double f_y = (j / height) * y_interval + left_bottom.y;
                     double value = func(f_x, f_y);
-
                     double ratio = (value - minVal) / (maxVal - minVal);
 
                     switch (drawingMode)
@@ -77,7 +84,7 @@ namespace AILabs.DrawingUtils
                     }
 
                     Color newColor = InterpolateColor(ratio);
-                    bitmap.SetPixel((int)i, (int)j, newColor);
+                    bitmap.SetPixel((int)(i), (int)(j), newColor);
                 }
             }
 
@@ -89,7 +96,6 @@ namespace AILabs.DrawingUtils
             int interpolatedR = (int)(_minColor.R + (_maxColor.R - _minColor.R) * ratio);
             int interpolatedG = (int)(_minColor.G + (_maxColor.G - _minColor.G) * ratio);
             int interpolatedB = (int)(_minColor.B + (_maxColor.B - _minColor.B) * ratio);
-            double r = ratio;
             return Color.FromArgb(interpolatedR, interpolatedG, interpolatedB);
         }
     }
