@@ -49,6 +49,7 @@
             this.label1.Size = new System.Drawing.Size(318, 32);
             this.label1.TabIndex = 0;
             this.label1.Text = "Загруженное изображение";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // button1
             // 
@@ -69,6 +70,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(256, 256);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // pictureBox2
             // 
@@ -78,6 +80,7 @@
             this.pictureBox2.Size = new System.Drawing.Size(256, 256);
             this.pictureBox2.TabIndex = 4;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // label2
             // 
@@ -88,6 +91,7 @@
             this.label2.Size = new System.Drawing.Size(280, 32);
             this.label2.TabIndex = 5;
             this.label2.Text = "Исходное изображение";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
@@ -98,6 +102,7 @@
             this.label3.Size = new System.Drawing.Size(97, 30);
             this.label3.TabIndex = 6;
             this.label3.Text = "Ошибки:";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // textBox1
             // 
@@ -106,6 +111,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(234, 29);
             this.textBox1.TabIndex = 7;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // openFileDialog1
             // 

@@ -24,37 +24,21 @@ namespace AILabs.Genetic
         public abstract void Mutate(double chance);
 
         public abstract (Chromosome child1, Chromosome child2) CrossoverWith(Chromosome partner);
-
-        public static uint GrayCode(uint n)
-        {
-            return n ^ (n >> 1);
-        }
-
-        public static uint DecodeGrayCode(uint grayCode)
-        {
-            uint n = 0;
-            while (grayCode != 0)
-            {
-                n ^= grayCode;
-                grayCode >>= 1;
-            }
-            return n;
-        }
     }
 
-    public class IntChromosome : Chromosome
+    public class BinaryChromosome : Chromosome
     {
         public uint X { get; private set; }
 
         public uint Y { get; private set; }
 
-        public IntChromosome(uint x, uint y, Random seed, RectangleF rect) : base(seed, rect)
+        public BinaryChromosome(uint x, uint y, Random seed, RectangleF rect) : base(seed, rect)
         {
             X = x;
             Y = y;
         }
 
-        public IntChromosome(Random seed, RectangleF rect) : base(seed, rect)
+        public BinaryChromosome(Random seed, RectangleF rect) : base(seed, rect)
         {
             X = GrayCode((uint)(uint.MaxValue * seed.NextDouble()));
             Y = GrayCode((uint)(uint.MaxValue * seed.NextDouble()));
@@ -63,8 +47,8 @@ namespace AILabs.Genetic
         public override Vector GetRealCoordiantes()
         {
             return new Vector(
-                (double)DecodeGrayCode(X) / DecodeGrayCode(uint.MaxValue) * _rect.Width + _rect.Left,
-                (double)DecodeGrayCode(Y) / DecodeGrayCode(uint.MaxValue) * _rect.Height + _rect.Top);
+                (double)DecodeGrayCode(X) / uint.MaxValue * _rect.Width + _rect.Left,
+                (double)DecodeGrayCode(Y) / uint.MaxValue * _rect.Height + _rect.Top);
         }
 
         public override void Mutate(double chance)
@@ -85,7 +69,7 @@ namespace AILabs.Genetic
 
         public override (Chromosome child1, Chromosome child2) CrossoverWith(Chromosome partner)
         {
-            IntChromosome other = (IntChromosome)partner;
+            BinaryChromosome other = (BinaryChromosome)partner;
 
             int gene = _seed.Next(2);
 
@@ -101,8 +85,8 @@ namespace AILabs.Genetic
                 uint newY2 = other.Y;
 
                 return (
-                    new IntChromosome(newX1, newY1, _seed, _rect),
-                    new IntChromosome(newX2, newY2, _seed, _rect));
+                    new BinaryChromosome(newX1, newY1, _seed, _rect),
+                    new BinaryChromosome(newX2, newY2, _seed, _rect));
             }
             else
             // Разрыв в Y            
@@ -116,9 +100,25 @@ namespace AILabs.Genetic
                 uint newY2 = (Y & mask) | (other.Y & ~mask);
 
                 return (
-                    new IntChromosome(newX1, newY1, _seed, _rect),
-                    new IntChromosome(newX2, newY2, _seed, _rect));
+                    new BinaryChromosome(newX1, newY1, _seed, _rect),
+                    new BinaryChromosome(newX2, newY2, _seed, _rect));
             }
+        }
+
+        public static uint GrayCode(uint n)
+        {
+            return n ^ (n >> 1);
+        }
+
+        public static uint DecodeGrayCode(uint grayCode)
+        {
+            uint n = 0;
+            while (grayCode != 0)
+            {
+                n ^= grayCode;
+                grayCode >>= 1;
+            }
+            return n;
         }
     }
 

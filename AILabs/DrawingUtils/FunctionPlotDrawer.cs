@@ -17,7 +17,7 @@ namespace AILabs.DrawingUtils
     {
         private static Color _minColor = Color.FromArgb(102, 0, 204);
         private static Color _maxColor = Color.FromArgb(255, 0, 0);
-        private static int _contourCount = 10;
+        private static int _contourCount = 20;
 
         public static Bitmap ContourPlotter(PictureBox pictureBox, Func<double, double, double> func,
             (double x, double y) left_bottom, (double x, double y) right_top, DrawingMode drawingMode)

@@ -260,13 +260,13 @@
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.DecimalPlaces = 2;
+            this.numericUpDown2.DecimalPlaces = 3;
             this.numericUpDown2.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.numericUpDown2.Increment = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            131072});
+            196608});
             this.numericUpDown2.Location = new System.Drawing.Point(993, 441);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             1,

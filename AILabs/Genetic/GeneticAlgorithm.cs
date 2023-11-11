@@ -1,10 +1,11 @@
 ﻿using MathLib;
+using System.Collections.Generic;
 
 namespace AILabs.Genetic
 {
     public enum EncodingMode
     {
-        Integer,
+        Binary,
         Real,
     }
 
@@ -16,13 +17,13 @@ namespace AILabs.Genetic
         {
             PopulationSize = populationSize;
             SelectionCutoffThreshold = selectionCutoffThreshold;
-            Encoding = EncodingMode.Integer;
+            Encoding = encodingMode;
             CrossoverChance = crossoverChance;
             MutationChance = mutationChance;
         }
 
         public static GeneticAlgorithmData DefaultData() => new GeneticAlgorithmData(100, 0.7,
-            EncodingMode.Integer, 0.6,
+            EncodingMode.Binary, 0.6,
             0.01);
 
         public int PopulationSize;
@@ -36,19 +37,6 @@ namespace AILabs.Genetic
         public double MutationChance;
 
         public double GenerationGap;
-    }
-
-    public struct RectangleBorder
-    {
-        public (double x1, double y1) Point1 { get; private set; }
-
-        public (double x2, double y2) Point2 { get; private set; }
-
-        public RectangleBorder((double x1, double y1) point1, (double x2, double y2) point2)
-        {
-            Point1 = point1;
-            Point2 = point2;
-        }
     }
 
     public class GeneticAlgorithm
@@ -84,10 +72,10 @@ namespace AILabs.Genetic
         {
             switch (_enconingMode)
             {
-                case EncodingMode.Integer:
+                case EncodingMode.Binary:
                     for (int i = 0; i < size; i++)
                     {
-                        IntChromosome chr = new IntChromosome(_seed, _border);
+                        BinaryChromosome chr = new BinaryChromosome(_seed, _border);
                         _populationData.Add(chr);
                     }
                     break;
@@ -118,7 +106,7 @@ namespace AILabs.Genetic
         {
             // Кроссовер
             List<Chromosome> newGeneration = new List<Chromosome>();
-            int childTargetCount = (int)((1 - _gaData.SelectionCutoffThreshold) * _populationMaxSize);
+            int childTargetCount = (int)((1 - _gaData.SelectionCutoffThreshold) * _populationData.Count);
 
             int childCount = 0;
             while (true)
@@ -147,14 +135,15 @@ namespace AILabs.Genetic
                 }
             }
 
+
+            // Мутация
+            newGeneration = Mutate(newGeneration);
+
             // Селекция
             Selection();
 
             // Обновление поколения
             _populationData.AddRange(newGeneration);
-
-            // Мутация
-            Mutate();
 
             double extremum = FuncVal(_populationData[0]);
             Vector extremumCoords = _populationData[0].GetRealCoordiantes();
@@ -177,7 +166,7 @@ namespace AILabs.Genetic
 
         private void Selection()
         {
-            int cutoffTarget = _populationMaxSize - (int)(_gaData.SelectionCutoffThreshold * _populationMaxSize);
+            int cutoffTarget = (int)((1 - _gaData.SelectionCutoffThreshold) * _populationData.Count);
 
             SortPopulation();
 
@@ -189,29 +178,32 @@ namespace AILabs.Genetic
 
         private (Chromosome child1, Chromosome child2) CrossingOver()
         {
-            int parent1 = _seed.Next(_populationMaxSize);
+            int parent1 = _seed.Next(_populationData.Count);
             int parent2 = parent1;
             while (parent1 == parent2)
             {
-                parent2 = _seed.Next(_populationMaxSize);
+                parent2 = _seed.Next(_populationData.Count);
             }
 
             return _populationData[parent1].CrossoverWith(_populationData[parent2]);
         }
 
-        private void Mutate()
+        private List<Chromosome> Mutate(List<Chromosome> mutants)
         {
-            foreach (Chromosome child in _populationData)
+            List<Chromosome> m = new List<Chromosome>();
+            foreach (Chromosome chr in mutants)
             {
-                child.Mutate(_gaData.MutationChance);
+                chr.Mutate(_gaData.MutationChance);
+                m.Add(chr);
             }
+            return m;
         }
 
         private void SortPopulation()
         {
-            for (int i = 0; i < _populationMaxSize; i++)
+            for (int i = 0; i < _populationData.Count; i++)
             {
-                for (int j = 1; j < _populationMaxSize - i; j++)
+                for (int j = 1; j < _populationData.Count - i; j++)
                 {
                     double val_j1 = FuncVal(_populationData[j - 1]);
                     double val_j2 = FuncVal(_populationData[j]);

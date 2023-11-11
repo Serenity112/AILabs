@@ -7,7 +7,14 @@ namespace MathLib
     {
         private List<double> _data = new List<double>();
 
-        public NumericVector() { }
+        public NumericVector(int size, double filldata)
+        {
+            _data = new List<double>();
+            for (int i = 0; i < size; i++)
+            {
+                _data.Add(filldata);
+            }
+        }
 
         public NumericVector(List<double> data)
         {
@@ -30,6 +37,21 @@ namespace MathLib
         }
 
         public static NumericVector operator *(double multiplier, NumericVector NumericVector) => NumericVector * multiplier;
+
+        public static NumericVector operator +(NumericVector v1, NumericVector v2)
+        {
+            if (v1.size != v2.size)
+            {
+                throw new ArgumentException("Different size");
+            }
+
+            NumericVector result = new NumericVector();
+            for (int i = 0; i < v1.size; i++)
+            {
+                result[i] = v1[i] + v2[i];
+            }
+            return result;
+        }
 
         public NumericVector Copy()
         {
@@ -73,6 +95,12 @@ namespace MathLib
         public void Append(double number)
         {
             _data.Add(number);
+        }
+
+        public NumericVector Prepend(double number)
+        {
+            _data.Insert(0, number);
+            return this;
         }
 
         public void RemoveAt(int index)
