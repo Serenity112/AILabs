@@ -11,6 +11,8 @@ namespace AILabs.Swarm
             InitializeComponent();
 
             _graphics = pictureBox1.CreateGraphics();
+            _graphics.TranslateTransform(pictureBox1.Width / 2, pictureBox1.Height / 2);
+            _graphics.ScaleTransform(1, -1);
 
             _allowedFunctions = new List<Func<double, double, double>>()
             {
@@ -23,7 +25,8 @@ namespace AILabs.Swarm
 
             listBox1.SelectedIndex = _pickedFunction;
             label5.Text = listBox1.Text;
-            _swarmMethod = new SwarmMethod(_allowedFunctions[_pickedFunction], 500);
+
+            CreateNewSwarm();
         }
 
         private List<Func<double, double, double>> _allowedFunctions;
@@ -38,30 +41,30 @@ namespace AILabs.Swarm
 
         private int _pickedFunction = 1;
 
-        private bool _plotReady = false;
+        private RectangleF _bounds;
 
         // Полный алгоритм
         private void button1_Click(object sender, EventArgs e)
         {
+            CreateNewSwarm();
+
             int maxCount = 1000;
             int countdown = 25;
 
             Vector extremum;
 
             var result = _swarmMethod.SingleIteration();
-            extremum = result.extremum;
-
-            //_plot = FunctionPlotDrawer.ContourPlotter(pictureBox1, _allowedFunctions[_pickedFunction], (0, 0), _interval, (DrawingMode)Convert.ToInt32(checkBox1.Checked));
+            extremum = result.ExtremumCoords;
 
             for (int i = 1; i < maxCount; i++)
             {
-                Bitmap particlesMap = DrawParticles(result.data);
+                Bitmap particlesMap = DrawParticles(result.Particles);
                 _graphics.Clear(Color.White);
-                _graphics.DrawImage(_plot, new Rectangle(0, 0, 512, 512));
-                _graphics.DrawImage(particlesMap, new Rectangle(0, 0, 512, 512));
+                _graphics.DrawImage(_plot, new Rectangle(-pictureBox1.Width / 2, -pictureBox1.Height / 2, pictureBox1.Width, pictureBox1.Height));
+                _graphics.DrawImage(particlesMap, new Rectangle(-pictureBox1.Width / 2, -pictureBox1.Height / 2, pictureBox1.Width, pictureBox1.Height));
 
                 result = _swarmMethod.SingleIteration();
-                Vector newExtremum = result.extremum;
+                Vector newExtremum = result.ExtremumCoords;
 
                 if (Math.Abs((newExtremum - extremum).Length()) <= 0.01)
                 {
@@ -79,9 +82,8 @@ namespace AILabs.Swarm
                 extremum = newExtremum;
 
                 Thread.Sleep(20);
+                textBox1.Text = Math.Round(result.ExtremumValue, 10).ToString() + " В координатах" + result.ExtremumCoords;
             }
-
-            textBox1.Text = extremum.ToString();
         }
 
         // Один шаг
@@ -89,22 +91,15 @@ namespace AILabs.Swarm
         {
             var result = _swarmMethod.SingleIteration();
 
-            textBox1.Text = result.extremum.ToString();
+            textBox1.Text = result.ExtremumValue.ToString();
 
             _graphics.Clear(Color.White);
 
-            if (!_plotReady)
-            {
-                _plotReady = true;
-                //_plot = FunctionPlotDrawer.ContourPlotter(pictureBox1, _allowedFunctions[_pickedFunction], (0, 0), _interval, (DrawingMode)Convert.ToInt32(checkBox1.Checked));
-            }
+            Bitmap particlesMap = DrawParticles(result.Particles);
 
-            Bitmap particlesMap = DrawParticles(result.data);
+            _graphics.DrawImage(_plot, new Rectangle(-pictureBox1.Width / 2, -pictureBox1.Height / 2, pictureBox1.Width, pictureBox1.Height));
 
-            _graphics.DrawImage(_plot, new Rectangle(0, 0, pictureBox1.Width, pictureBox1.Height));
-
-            _graphics.DrawImage(particlesMap, new Rectangle(0, 0, pictureBox1.Width, pictureBox1.Height));
-
+            _graphics.DrawImage(particlesMap, new Rectangle(-pictureBox1.Width / 2, -pictureBox1.Height / 2, pictureBox1.Width, pictureBox1.Height));
         }
 
         private Bitmap DrawParticles(List<ParticleData> data)
@@ -163,9 +158,27 @@ namespace AILabs.Swarm
 
         private void CreateNewSwarm()
         {
-            _swarmMethod = new SwarmMethod(_allowedFunctions[listBox1.SelectedIndex], trackBar1.Value);
+            (float x, float y) p1 = (float.Parse(textBox2.Text), float.Parse(textBox3.Text));
+            (float x, float y) p2 = (float.Parse(textBox4.Text), float.Parse(textBox5.Text));
+            float interval_x = Math.Abs(p1.x - p2.x);
+            float interval_y = Math.Abs(p1.y - p2.y);
+            (float x0, float x1) x_asc = p1.x < p2.x ? (p1.x, p2.x) : (p2.x, p1.x);
+            (float y0, float y1) y_asc = p1.y < p2.y ? (p1.y, p2.y) : (p2.y, p1.y);
+            label11.Text = x_asc.x1.ToString();
+            label12.Text = x_asc.x0.ToString();
+            label10.Text = y_asc.y0.ToString();
+            label19.Text = y_asc.y1.ToString();
+            (float x, float y) left_bottom = (x_asc.x0, y_asc.y0);
+            (float x, float y) right_top = (x_asc.x1, y_asc.y1);
+
+            _plot = FunctionPlotDrawer.ContourPlotter(pictureBox1, _allowedFunctions[_pickedFunction],
+                left_bottom, right_top, (DrawingMode)Convert.ToInt32(checkBox1.Checked));
+            _graphics.DrawImage(_plot, new Rectangle(-pictureBox1.Width / 2, -pictureBox1.Height / 2, pictureBox1.Width, pictureBox1.Height));
+
+            _bounds = new RectangleF(left_bottom.x, left_bottom.y, interval_x, interval_y);
+
+            _swarmMethod = new SwarmMethod(_allowedFunctions[listBox1.SelectedIndex], trackBar1.Value, _bounds);
             textBox1.Text = "";
-            _plotReady = false;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -174,6 +187,11 @@ namespace AILabs.Swarm
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
         {
 
         }

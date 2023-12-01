@@ -12,6 +12,7 @@
     <Folder Include="HammingNetwork\Input\" />
     <Folder Include="HammingNetwork\Resources\" />
     <Folder Include="LabAnts\Input\" />
+    <Folder Include="MachineLearning\Input\" />
   </ItemGroup>
 
   <ItemGroup>

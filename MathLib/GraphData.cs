@@ -76,6 +76,14 @@ namespace MathLib
 
         public double Length { get; private set; }
 
+        public int this[int i]
+        {
+            get
+            {
+                return PathIndexes[i];
+            }
+        }
+
         public override bool Equals(object? obj)
         {
             if (!(obj is PathData))

@@ -35,8 +35,20 @@ namespace AILabs.Genetic
         public double CrossoverChance;
 
         public double MutationChance;
+    }
 
-        public double GenerationGap;
+    public struct GeneticAlgResult
+    {
+        public GeneticAlgResult(List<Vector> vectors, double extremumValue, Vector extremumCoords)
+        {
+            Vectors = vectors;
+            ExtremumValue = extremumValue;
+            ExtremumCoords = extremumCoords;
+        }
+
+        public List<Vector> Vectors;
+        public double ExtremumValue;
+        public Vector ExtremumCoords;
     }
 
     public class GeneticAlgorithm
@@ -45,7 +57,7 @@ namespace AILabs.Genetic
 
         private Random _seed;
 
-        RectangleF _border;
+        private RectangleF _border;
 
         private List<Chromosome> _populationData = new List<Chromosome>();
 
@@ -86,21 +98,7 @@ namespace AILabs.Genetic
                     }
                     break;
             }
-        }
-
-        public struct GeneticAlgResult
-        {
-            public GeneticAlgResult(List<Vector> vectors, double extremumValue, Vector extremumCoords)
-            {
-                Vectors = vectors;
-                ExtremumValue = extremumValue;
-                ExtremumCoords = extremumCoords;
-            }
-
-            public List<Vector> Vectors;
-            public double ExtremumValue;
-            public Vector ExtremumCoords;
-        }
+        }  
 
         public GeneticAlgResult SingleIteration()
         {

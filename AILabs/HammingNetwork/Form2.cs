@@ -33,6 +33,7 @@ namespace AILabs.HammingNetwork
             }
             catch (Exception ex)
             {
+                pictureBox1.Image = ImageUtils.EnlargeImage(image, 16);
                 textBox1.Text = ex.Message;
                 return;
             }

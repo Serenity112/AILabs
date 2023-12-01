@@ -18,30 +18,29 @@ namespace AILabs.HammingNetwork
             vectors.ForEach(x => _weightMatrix.Add(x * 0.5));
 
             _zOffset = (double)vectors[0].size / 2;
-            _k1 = 0.1;
-            _Un = 1 / _k1;
+            _Un = (double)vectors[0].size;
+            _k1 = 1 / _Un;
             _epsilon = 1.0 / vectors.Count;
         }
 
         public int GetVectorGroup(NumericVector newVect)
         {
             int zCount = _weightMatrix.Count;
-            int sCount = newVect.size;
 
-            NumericVector Uinput = new NumericVector();
+            NumericVector Z_vectors = new NumericVector();
             for (int i = 0; i < zCount; i++)
             {
                 double sum = 0;
 
-                for (int j = 0; j < sCount; j++)
+                for (int j = 0; j < newVect.size; j++)
                 {
                     sum += _weightMatrix[i][j] * newVect[j];
                 }
 
-                Uinput.Append(_zOffset + sum);
+                Z_vectors.Append(_zOffset + sum);
             }
 
-            NumericVector MaxnetPrev = ActivationFunctions.Z_ActivationFunction(Uinput, _k1, _Un);
+            NumericVector MaxnetPrev = ActivationFunctions.Z_ActivationFunction(Z_vectors, _k1, _Un);
             NumericVector MaxnetNew = MaxnetPrev.Copy();
             int iteration = 1;
 

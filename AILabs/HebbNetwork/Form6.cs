@@ -22,6 +22,8 @@ namespace AILabs.HebbNetwork
             "А.png",
             "Н.png",
             "Ч.png",
+            "О.png",
+            //"К.png",
         };
 
         private HebbNetwork _hebbNetwork;
@@ -36,7 +38,7 @@ namespace AILabs.HebbNetwork
                 Bitmap bitmap = new Bitmap($"{_resourcesPath}{file}");
                 _inputVectrors.Add(ImageUtils.ConvertImageToBinaryVector(bitmap));
             }
-            _hebbNetwork = new HebbNetwork(_inputVectrors);
+            _hebbNetwork = new HebbNetwork(_inputVectrors, textBox1);
         }
 
         public int Recognize(Bitmap bitmap)
@@ -72,6 +74,7 @@ namespace AILabs.HebbNetwork
             catch (Exception ex)
             {
                 pictureBox1.Image = ImageUtils.EnlargeImage(image, 16);
+                pictureBox2.Image = null;
                 textBox1.Text = ex.Message;
                 return;
             }

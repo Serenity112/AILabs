@@ -152,14 +152,21 @@ namespace AILabs.Genetic
         {
             double shift = 0.5;
 
+            (double X, double Y) left_bot = (_rect.X, _rect.Y);
+            (double X, double Y) right_top = (_rect.X + _rect.Width, _rect.Y + _rect.Height);
+
             if (_seed.NextDouble() < chance)
             {
                 X += (_seed.NextDouble() * 2 * shift) - shift;
+                if (X <= left_bot.X) { X = left_bot.X; }
+                if (X >= right_top.X) { X = right_top.X; }
             }
 
             if (_seed.NextDouble() < chance)
             {
                 Y += (_seed.NextDouble() * 2 * shift) - shift;
+                if (Y <= left_bot.Y) { Y = left_bot.Y; }
+                if (Y >= right_top.Y) { Y = right_top.Y; }
             }
         }
 

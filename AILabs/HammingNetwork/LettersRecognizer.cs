@@ -6,13 +6,14 @@ namespace AILabs.HammingNetwork
     {
         private string _resourcesPath = @"..\..\..\HammingNetwork\Resources\";
 
-        public string[] _lettersFileNames = new string[]
+        private string[] _lettersFileNames = new string[]
         {
             "С.png",
             "А.png",
             "Н.png",
             "Ч.png",
             "О.png",
+            "К.png",
         };
 
         private HammingNetwork _hammingNetwork;

@@ -13,14 +13,15 @@ namespace AILabs.HebbNetwork
         private int _vectorsCount;
         private int _vectorLen;
 
-        private List<NumericVector> _tVectors;
+        private List<NumericVector> _outputVectors;
 
-        private int _maxGenerations = 100;
-
-        public HebbNetwork(List<NumericVector> input)
+        private int _maxGenerations = 1000;
+        private TextBox textbox;
+        public HebbNetwork(List<NumericVector> input, TextBox textbox)
         {
+            this.textbox = textbox;
             _wMatrix = new List<NumericVector>();
-            _tVectors = new List<NumericVector>();
+            _outputVectors = new List<NumericVector>();
 
             _vectorsCount = input.Count;
             _vectorLen = input[0].size;
@@ -35,8 +36,10 @@ namespace AILabs.HebbNetwork
             for (int j = 0; j < _vectorsCount; j++)
             {
                 NumericVector newCode = codegen.GetNext();
-                _tVectors.Add(newCode);
+                textbox.Text += newCode.ToString();
+                _outputVectors.Add(newCode);
 
+                // +1 т.к. хранится как w_0, так и w_1..w_n
                 NumericVector v = new NumericVector(_vectorLen + 1, 0);
                 _wMatrix.Add(v);
             }
@@ -52,7 +55,7 @@ namespace AILabs.HebbNetwork
                     NumericVector trainingVector = input[j].Copy();
                     NumericVector t_result = CalculateWeightReaction(trainingVector);
 
-                    if (t_result.Equals(_tVectors[j]))
+                    if (t_result.Equals(_outputVectors[j]))
                     {
                         continue;
                     }
@@ -68,7 +71,7 @@ namespace AILabs.HebbNetwork
                     NumericVector trainingVector = input[j].Copy();
                     NumericVector t_result = CalculateWeightReaction(trainingVector);
 
-                    if (!t_result.Equals(_tVectors[j]))
+                    if (!t_result.Equals(_outputVectors[j]))
                     {
                         training_ended = false;
                     }
@@ -76,16 +79,18 @@ namespace AILabs.HebbNetwork
 
                 counter++;
             }
+
+            textbox.Text += counter;
         }
 
         private void CorrectWeights(NumericVector input, int vectorNumber)
         {
             for (int j = 0; j < _wMatrix.Count; j++)
             {
-                for (int i = 0; i < _wMatrix[0].size; i++)
+                for (int i = 0; i < input.size; i++)
                 {
 
-                    _wMatrix[j][i] = _wMatrix[j][i] + input[i] * _tVectors[vectorNumber][j];
+                    _wMatrix[j][i] = _wMatrix[j][i] + input[i] * _outputVectors[vectorNumber][j];
                 }
             }
         }
@@ -125,7 +130,7 @@ namespace AILabs.HebbNetwork
 
             for (int i = 0; i < _vectorsCount; i++)
             {
-                if (result.Equals(_tVectors[i]))
+                if (result.Equals(_outputVectors[i]))
                 {
                     if (found_index != -1)
                     {

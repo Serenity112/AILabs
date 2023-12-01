@@ -19,6 +19,8 @@ namespace MathLib
 
         public Vector(Point start, Point end) : this(end.X - start.X, end.Y - start.Y) { }
 
+        public Vector(PointF start, PointF end) : this(end.X - start.X, end.Y - start.Y) { }
+
         public static Point operator +(Point first, Vector second) => new Point((int)(first.X + second.Dx), (int)(first.Y + second.Dy));
 
         public static PointF operator +(PointF first, Vector second) => new PointF((float)(first.X + second.Dx), (float)(first.Y + second.Dy));

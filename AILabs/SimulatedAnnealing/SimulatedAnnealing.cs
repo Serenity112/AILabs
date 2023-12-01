@@ -66,7 +66,7 @@ namespace AILabs.SimulatedAnnealing
 
         public PathData SingleIteration()
         {
-            PathData newSolution = ShuffledSolution();
+            PathData newSolution = SwapSolution();
 
             double diff = _solution.Length - newSolution.Length;
 
@@ -80,13 +80,12 @@ namespace AILabs.SimulatedAnnealing
             return _solution;
         }
 
-
         private PathData ShuffledSolution()
         {
             int size = _graphData.Size;
 
             List<int> newSolution = new List<int>();
-            for (int i = 1; i < size; i++)
+            for (int i = 1; i < size - 1; i++)
             {
                 newSolution.Add(i);
             }
@@ -98,6 +97,32 @@ namespace AILabs.SimulatedAnnealing
                 newSolution[randIndex] = newSolution[i];
                 newSolution[i] = buffer;
             }
+
+            newSolution.Insert(0, 0);
+            newSolution.Add(0);
+
+            return _graphData.GetPath(newSolution);
+        }
+
+        private PathData SwapSolution()
+        {
+            int size = _graphData.Size;
+
+            List<int> newSolution = new List<int>();
+            for (int i = 1; i < size - 1; i++)
+            {
+                newSolution.Add(_solution[i]);
+            }
+
+            int randIndex1 = _randomSeed.Next(0, newSolution.Count);
+            int randIndex2 = randIndex1;
+            while (randIndex1 == randIndex2)
+            {
+                randIndex2 = _randomSeed.Next(0, newSolution.Count);
+            }
+            int buff = newSolution[randIndex1];
+            newSolution[randIndex1] = newSolution[randIndex2];
+            newSolution[randIndex2] = buff;
 
             newSolution.Insert(0, 0);
             newSolution.Add(0);

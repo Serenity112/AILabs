@@ -86,5 +86,10 @@ namespace AILabs.SimulatedAnnealing
             _graphDrawer.RedrawGraphBase();
             _graphDrawer.ColorVertex(0, Color.Red);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
