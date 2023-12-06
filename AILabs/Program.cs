@@ -40,10 +40,10 @@ namespace AILabs
             //Application.Run(new Form6());
 
             // люьхммне насвемхе
-            Application.Run(new Form7());
+            //Application.Run(new Form7());
 
-            // мев╗рйюъ кн*хйю
-            //Application.Run(new FormFL());
+            // мев╗рйюъ кнцхйю
+            Application.Run(new FormFL());
         }
     }
 }

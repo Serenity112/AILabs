@@ -85,7 +85,7 @@ namespace AILabs.SimulatedAnnealing
             int size = _graphData.Size;
 
             List<int> newSolution = new List<int>();
-            for (int i = 1; i < size - 1; i++)
+            for (int i = 1; i < size; i++)
             {
                 newSolution.Add(i);
             }
@@ -109,7 +109,7 @@ namespace AILabs.SimulatedAnnealing
             int size = _graphData.Size;
 
             List<int> newSolution = new List<int>();
-            for (int i = 1; i < size - 1; i++)
+            for (int i = 1; i < size; i++)
             {
                 newSolution.Add(_solution[i]);
             }

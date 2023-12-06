@@ -87,6 +87,7 @@
             this.button5.TabIndex = 40;
             this.button5.Text = "Начать заново";
             this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button4
             // 
@@ -176,7 +177,7 @@
             // 
             // Numeric3
             // 
-            this.Numeric3.DecimalPlaces = 2;
+            this.Numeric3.DecimalPlaces = 4;
             this.Numeric3.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Numeric3.Increment = new decimal(new int[] {
             1,

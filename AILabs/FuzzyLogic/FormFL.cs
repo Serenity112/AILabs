@@ -1,31 +1,18 @@
 ﻿using AILabs.FuzzyLogic.Map;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace AILabs.FuzzyLogic
 {
     public partial class FormFL : Form
     {
         Graphics _graphics;
-        private int width;
-        private int height;
+        private int _width;
+        private int _height;
 
         private SurfaceMap _surfaceMap;
 
         private Bitmap _mapPlot;
 
-        private Random _random;
-
-        private FuzzyRobot _fuzzyRobot;
+        private FuzzyRobot? _fuzzyRobot = null;
 
         private CancellationTokenSource _robotToken;
 
@@ -37,22 +24,21 @@ namespace AILabs.FuzzyLogic
         {
             InitializeComponent();
 
-            width = pictureBox1.Width;
-            height = pictureBox1.Height;
+            _width = pictureBox1.Width;
+            _height = pictureBox1.Height;
             _graphics = pictureBox1.CreateGraphics();
 
             _robotToken = new CancellationTokenSource();
-            _random = new Random();
         }
 
         // Создание поля
         private void button1_Click(object sender, EventArgs e)
         {
-            _mapPlot = new Bitmap(width, height);
+            _mapPlot = new Bitmap(_width, _height);
             Graphics graphics = Graphics.FromImage(_mapPlot);
             graphics.Clear(Color.White);
 
-            _surfaceMap = new SurfaceMap(height, width);
+            _surfaceMap = new SurfaceMap(_height, _width);
 
             _tileSize = (int)numericUpDown1.Value;
             int solidTiles = (int)numericUpDown2.Value;
@@ -70,93 +56,89 @@ namespace AILabs.FuzzyLogic
         {
             Task.Run(() =>
             {
-                for (int i = 0; i < 1000; i++)
+                double curr_angle = _fuzzyRobot.GetCurrentVisionAngle();
+
+                while (true)
                 {
                     if (token.IsCancellationRequested)
                     {
                         break;
                     }
 
-                    var directions = _fuzzyRobot.RayTraceDirections(_surfaceMap);
-                    var fuzzyValues = _fuzzyRobot.Fuzzify(directions);
+                    var rayResult = _fuzzyRobot.RayTraceDirections(_surfaceMap);
+
+                    if (checkBox1.Checked)
+                    {
+                        _graphics.DrawLine(new Pen(Color.Green, 2), rayResult.Points[0], _fuzzyRobot.CentroidGlobalPosition);
+                        _graphics.DrawLine(new Pen(Color.Green, 2), rayResult.Points[1], _fuzzyRobot.CentroidGlobalPosition);
+                        _graphics.DrawLine(new Pen(Color.Green, 2), rayResult.Points[2], _fuzzyRobot.CentroidGlobalPosition);
+                        Task.Delay(1).Wait();
+                    }
+
+                    var fuzzyValues = _fuzzyRobot.Fuzzify(rayResult.Distances);
                     var rulesOutput = _fuzzyRobot.FuzzyRules(fuzzyValues);
                     double deffuzed = _fuzzyRobot.GetDeffusedValue(rulesOutput);
 
                     _fuzzyRobot.Rotate(deffuzed);
-                    _fuzzyRobot.Move();
+                    double newAngle = _fuzzyRobot.GetCurrentVisionAngle();
 
+                    if (Math.Round(curr_angle, 3) == Math.Round(newAngle, 3))
+                    {
+                        _fuzzyRobot.Move();
+                    }
+
+                    curr_angle = newAngle;
 
                     _graphics.Clear(Color.White);
                     pictureBox1.Image = _mapPlot;
                     Task.Delay(1).Wait();
 
                     _graphics.DrawImage(_fuzzyRobot.DrawRobot(), _fuzzyRobot.LeftTopGlobalPosition);
-                    Task.Delay(1).Wait();
-
-                    Task.Delay(3).Wait();
+                    Task.Delay(4).Wait();
                 }
-
-
-                //_graphics.DrawLine(new Pen(Color.Black, 2), directions[0], _fuzzyRobot.CentroidGlobalPosition);
-                //_graphics.DrawLine(new Pen(Color.Black, 2), directions[1], _fuzzyRobot.CentroidGlobalPosition);
-                //_graphics.DrawLine(new Pen(Color.Black, 2), directions[2], _fuzzyRobot.CentroidGlobalPosition);
-
-
-
             });
         }
 
         // Создание нового робота на текущем поле
         private void button2_Click(object sender, EventArgs e)
         {
-            int raysAngle = 45;
-            float robotSize = _tileSize / 2;
+            double visionAngles = (double)(numericUpDown3.Value) * Math.PI / 180;
+            float robotSize = _tileSize / 4;
+            double speed = (double)(numericUpDown4.Value);
 
-            _fuzzyRobot = new FuzzyRobot(raysAngle, robotSize, _tileSize);
-
+            _fuzzyRobot = new FuzzyRobot(visionAngles, robotSize, _tileSize, speed);
             _fuzzyRobot.SetRandomStartPosition(_surfaceMap);
 
             Bitmap robotImg = _fuzzyRobot.DrawRobot();
             _graphics.DrawImage(robotImg, _fuzzyRobot.LeftTopGlobalPosition);
-
-
-
         }
 
         // Пауза / Запуск робота
         private void button3_Click(object sender, EventArgs e)
         {
-            ChangeRobotState();
+            if (_fuzzyRobot != null)
+            {
+                ChangeRobotState();
+            }
         }
 
         private void ChangeRobotState()
         {
-            //IterateRobot(_robotToken);
-            //return;
-
-            if (_robotActive)
+            if (_fuzzyRobot != null)
             {
-                _robotToken.Cancel();
+                if (_robotActive)
+                {
+                    _robotToken.Cancel();
+                }
+                else
+                {
+                    _robotToken.Dispose();
+                    _robotToken = new CancellationTokenSource();
+                    IterateRobot(_robotToken);
+                }
+
+                _robotActive = !_robotActive;
             }
-            else
-            {
-                _robotToken.Dispose();
-                _robotToken = new CancellationTokenSource();
-                IterateRobot(_robotToken);
-            }
-
-            var directions = _fuzzyRobot.RayTraceDirections(_surfaceMap);
-            var fuzzyValues = _fuzzyRobot.Fuzzify(directions);
-            var rulesOutput = _fuzzyRobot.FuzzyRules(fuzzyValues);
-
-
-            textBox1.Text = rulesOutput[FuzzyRobot.RotAction.RotNone].ToString();
-            textBox2.Text = rulesOutput[FuzzyRobot.RotAction.RotLeft].ToString();
-            textBox3.Text = rulesOutput[FuzzyRobot.RotAction.RotRight].ToString();
-
-
-
-            _robotActive = !_robotActive;
         }
     }
 }

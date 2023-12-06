@@ -10,7 +10,7 @@ namespace AILabs.SimulatedAnnealing
         private SimulatedAnnealing _annealing;
         private GraphDrawer _graphDrawer;
         private GraphData _inputGraph;
-        private string _cityDataPath = @"..\..\..\SimulatedAnnealing\Input\input.txt";
+        private string _cityDataPath = @"..\..\..\SimulatedAnnealing\Input\input2.txt";
 
         public Form4()
         {
@@ -88,6 +88,11 @@ namespace AILabs.SimulatedAnnealing
         }
 
         private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
         {
 
         }
