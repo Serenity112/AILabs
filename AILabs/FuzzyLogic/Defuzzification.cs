@@ -9,11 +9,11 @@ namespace AILabs.FuzzyLogic
 {
     public class FuzzyTriangle
     {
-        Func<double, double> leftEdge;
-        Func<double, double> rightEdge;
-        double a;
-        double b;
-        double c;
+        private Func<double, double> leftEdge;
+        private Func<double, double> rightEdge;
+        private double a;
+        private double b;
+        private double c;
 
         public FuzzyTriangle(double a, double b, double c)
         {
@@ -45,7 +45,7 @@ namespace AILabs.FuzzyLogic
 
     public class Defuzzification
     {
-        private double accuracyStep = 1;
+        private double _accuracyStep = 1;
 
         private List<FuzzyTriangle> _triangles = new List<FuzzyTriangle>();
 
@@ -68,7 +68,7 @@ namespace AILabs.FuzzyLogic
             double sum1 = 0;
             double sum2 = 0;
 
-            for (double x = -30; x < 30; x += accuracyStep)
+            for (double x = -30; x < 30; x += _accuracyStep)
             {
                 double tr0 = _triangles[0].GetValue(x, borders[0]);
                 double tr1 = _triangles[1].GetValue(x, borders[1]);

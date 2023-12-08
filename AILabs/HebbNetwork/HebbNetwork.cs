@@ -52,16 +52,16 @@ namespace AILabs.HebbNetwork
                 // Прогон каждой пары на входе
                 for (int j = 0; j < _vectorsCount; j++)
                 {
-                    NumericVector trainingVector = input[j].Copy();
-                    NumericVector t_result = CalculateWeightReaction(trainingVector);
+                    NumericVector trainingVector = input[j].Copy().Prepend(1);
+                    /* NumericVector t_result = CalculateWeightReaction(trainingVector);
 
-                    if (t_result.Equals(_outputVectors[j]))
-                    {
-                        continue;
-                    }
+                     if (t_result.Equals(_outputVectors[j]))
+                     {
+                         continue;
+                     }*/
 
                     // Корректировка весов матрицы W  
-                    CorrectWeights(trainingVector.Copy().Prepend(1), j);
+                    CorrectWeights(trainingVector, j);
                 }
 
                 // Проверка обучения
@@ -98,7 +98,7 @@ namespace AILabs.HebbNetwork
         // Получить реакцию размерности m по входному вектору размерности n
         private NumericVector CalculateWeightReaction(NumericVector input)
         {
-            NumericVector reult = new NumericVector(_vectorsCount, 0);
+            NumericVector result = new NumericVector(_vectorsCount, 0);
 
             for (int j = 0; j < _vectorsCount; j++)
             {
@@ -115,10 +115,10 @@ namespace AILabs.HebbNetwork
 
                 sum = (sum >= 0) ? 1 : -1;
 
-                reult[j] = sum;
+                result[j] = sum;
             }
 
-            return reult;
+            return result;
         }
 
         public int GetVectorGroup(NumericVector vectToRecognize)
@@ -171,7 +171,7 @@ namespace AILabs.HebbNetwork
             NumericVector vector = new NumericVector();
             for (int i = 0; i < length; i++)
             {
-                vector.Append(((currentNumber >> i) & 1) == 0 ? -1 : 1);
+                vector.Append(((currentNumber >> i) & 1) == 0 ? 1 : -1);
             }
             currentNumber++;
             return vector;

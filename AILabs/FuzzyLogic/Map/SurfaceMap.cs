@@ -11,6 +11,7 @@ namespace AILabs.FuzzyLogic.Map
     {
         private int _mapWidth;
         private int _mapHeight;
+        private int _tileSize;
         private IMapTile[,] _currentMap;
 
         public SurfaceMap(int mapHeight, int mapWidth)
@@ -26,22 +27,7 @@ namespace AILabs.FuzzyLogic.Map
 
         public void GenerateNewMap(int tileSize, int solidTilesCount)
         {
-            _currentMap = CreateNewMap(tileSize, solidTilesCount);
-        }
-
-        public IEnumerable<IMapTile> GetNextTile()
-        {
-            for (int h = 0; h < _currentMap.GetLength(0); h++)
-            {
-                for (int w = 0; w < _currentMap.GetLength(1); w++)
-                {
-                    yield return _currentMap[h, w];
-                }
-            }
-        }
-
-        private IMapTile[,] CreateNewMap(int tileSize, int solidTilesCount)
-        {
+            _tileSize = tileSize;
             int tilesCountW = (int)(_mapWidth / tileSize);
             int tilesCountH = (int)(_mapHeight / tileSize);
 
@@ -86,7 +72,37 @@ namespace AILabs.FuzzyLogic.Map
                 }
             }
 
-            return map;
+            _currentMap = map;
+        }
+
+        public IEnumerable<IMapTile> GetNextTile()
+        {
+            for (int h = 0; h < _currentMap.GetLength(0); h++)
+            {
+                for (int w = 0; w < _currentMap.GetLength(1); w++)
+                {
+                    yield return _currentMap[h, w];
+                }
+            }
+        }
+
+        public (PointF LeftTop, float sideLen) GetRandomFreePosition()
+        {
+            Random random = new Random();
+
+            List<IMapTile> avaliableTiles = new List<IMapTile>();
+
+            foreach (var tile in GetNextTile())
+            {
+                if (!tile.CollidesWithPoint(tile.LeftTop))
+                {
+                    avaliableTiles.Add(tile);
+                }
+            }
+
+            IMapTile startingTile = avaliableTiles[random.Next(avaliableTiles.Count)];
+
+            return (startingTile.LeftTop, _tileSize);
         }
     }
 }

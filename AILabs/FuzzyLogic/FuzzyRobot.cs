@@ -11,22 +11,22 @@ using static AILabs.FuzzyLogic.FuzzyRobot;
 
 namespace AILabs.FuzzyLogic
 {
+    public enum RotAction
+    {
+        RotNone,
+        RotLeft,
+        RotRight,
+    }
+
+    public enum RobotVision
+    {
+        Straight,
+        Left,
+        Right,
+    }
+
     public class FuzzyRobot
     {
-        public enum RotAction
-        {
-            RotNone,
-            RotLeft,
-            RotRight,
-        }
-
-        public enum RobotVision
-        {
-            Straight,
-            Left,
-            Right,
-        }
-
         private double _raysAngle;
 
         public PointF CentroidGlobalPosition { get; private set; }
@@ -43,8 +43,7 @@ namespace AILabs.FuzzyLogic
         private Fuzzification _fuzzification;
         private Defuzzification _defuzzification;
 
-        public FuzzyRobot(double raysAngle,
-            double robotSize, int tileSize, double speed)
+        public FuzzyRobot(double raysAngle, double robotSize, int tileSize, double speed)
         {
             _raysAngle = raysAngle;
             _robotSize = robotSize;
@@ -66,27 +65,14 @@ namespace AILabs.FuzzyLogic
             return _visionAngle;
         }
 
-
         public void SetRandomStartPosition(SurfaceMap sMap)
         {
-            Random random = new Random();
-
-            List<IMapTile> avaliableTiles = new List<IMapTile>();
-
-            foreach (var tile in sMap.GetNextTile())
-            {
-                if (!tile.CollidesWithPoint(tile.LeftTop))
-                {
-                    avaliableTiles.Add(tile);
-                }
-            }
-
-            IMapTile startingTile = avaliableTiles[random.Next(avaliableTiles.Count)];
+            var startingTile = sMap.GetRandomFreePosition();
 
             CentroidGlobalPosition = new PointF()
             {
-                X = startingTile.LeftTop.X + startingTile.Width / 2,
-                Y = startingTile.LeftTop.Y + startingTile.Height / 2
+                X = startingTile.LeftTop.X + startingTile.sideLen / 2,
+                Y = startingTile.LeftTop.Y + startingTile.sideLen / 2
             };
 
             LeftTopGlobalPosition = new PointF()
@@ -95,7 +81,7 @@ namespace AILabs.FuzzyLogic
                 Y = CentroidGlobalPosition.Y - (float)_robotSize / 2,
             };
 
-            _visionAngle = random.NextDouble() * Math.PI * 2;
+            _visionAngle = new Random().NextDouble() * Math.PI * 2;
 
             return;
         }
